@@ -601,6 +601,28 @@ private:
     SbBool lockButton1 {false};
 };
 
+/** Creo-inspired navigation (not affiliated with PTC).
+ *  Middle = rotate, Shift+Middle = pan, Ctrl+Middle = zoom.
+ */
+class GuiExport CreoInspiredNavigationStyle: public UserNavigationStyle
+{
+    using inherited = UserNavigationStyle;
+
+    TYPESYSTEM_HEADER_WITH_OVERRIDE();
+
+public:
+    CreoInspiredNavigationStyle();
+    ~CreoInspiredNavigationStyle() override;
+    const char* mouseButtons(ViewerMode) override;
+    std::string userFriendlyName() const override;
+
+protected:
+    SbBool processSoEvent(const SoEvent* const ev) override;
+
+private:
+    SbBool lockButton1 {false};
+};
+
 class GuiExport MayaGestureNavigationStyle: public UserNavigationStyle
 {
     using inherited = UserNavigationStyle;

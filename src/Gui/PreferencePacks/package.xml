@@ -27,13 +27,42 @@
       <tag>light</tag>
     </preferencepack>
 	<preferencepack>
-	  <name>FreeCAD Dark</name>
+      <name>FreeCAD Dark</name>
       <type>Theme</type>
       <description>Applies a basic dark theme.</description>
       <version>1.0.0</version>
       <tag>built-in</tag>
       <tag>background</tag>
       <tag>dark</tag>
+    </preferencepack>
+    <preferencepack>
+      <name>FreeCAD Native</name>
+      <type>Compatibility</type>
+      <description>FreeCAD-native presentation stack used by Compatibility Profiles (CAD navigation, FreeCAD Light theme defaults).</description>
+      <version>1.0.0</version>
+      <tag>built-in</tag>
+      <tag>compatibility-profile</tag>
+      <tag>navigation</tag>
+    </preferencepack>
+    <preferencepack>
+      <name>Creo Inspired</name>
+      <type>Compatibility</type>
+      <description>Creo-inspired presentation stack: theme tokens, Creo-inspired navigation, curated shortcuts, and main-window layout. Not affiliated with PTC.</description>
+      <version>1.0.0</version>
+      <tag>built-in</tag>
+      <tag>compatibility-profile</tag>
+      <tag>navigation</tag>
+      <tag>inspired</tag>
+    </preferencepack>
+    <preferencepack>
+      <name>SolidWorks Inspired</name>
+      <type>Compatibility</type>
+      <description>SolidWorks-inspired presentation stack: theme tokens, SolidWorks navigation style, curated shortcuts, and main-window layout. Not affiliated with Dassault Systemes.</description>
+      <version>1.0.0</version>
+      <tag>built-in</tag>
+      <tag>compatibility-profile</tag>
+      <tag>navigation</tag>
+      <tag>inspired</tag>
     </preferencepack>
   </content>
 </package>

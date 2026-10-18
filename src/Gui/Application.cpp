@@ -95,6 +95,7 @@
 #include "Macro.h"
 #include "FreeCADGuiModulePy.h"
 #include "PreferencePackManager.h"
+#include "CompatibilityProfileManager.h"
 #include "PythonConsolePy.h"
 #include "MainWindowPy.h"
 #include "MDIViewPy.h"
@@ -245,6 +246,7 @@ struct ApplicationP
 
         // Create the Theme Manager
         prefPackManager = new PreferencePackManager();
+        compatibilityProfileManager = new CompatibilityProfileManager();
         // Create the Style Parameter Manager
         styleParameterManager = new StyleParameters::ParameterManager();
     }
@@ -253,6 +255,7 @@ struct ApplicationP
     {
         delete macroMngr;
         delete prefPackManager;
+        delete compatibilityProfileManager;
     }
 
     /// list of all handled documents
@@ -263,6 +266,7 @@ struct ApplicationP
 
     MacroManager* macroMngr;
     PreferencePackManager* prefPackManager;
+    CompatibilityProfileManager* compatibilityProfileManager;
     StyleParameters::ParameterManager* styleParameterManager;
 
     /// List of all registered views
@@ -2238,6 +2242,11 @@ CommandManager& Application::commandManager()
 Gui::PreferencePackManager* Application::prefPackManager()
 {
     return d->prefPackManager;
+}
+
+Gui::CompatibilityProfileManager* Application::compatibilityProfileManager()
+{
+    return d->compatibilityProfileManager;
 }
 
 Gui::StyleParameters::ParameterManager* Application::styleParameterManager()

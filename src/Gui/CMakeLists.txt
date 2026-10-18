@@ -633,6 +633,7 @@ SET(Dialog_Settings_CPP_SRCS
     PreferencePages/DlgSettingsViewColor.cpp
     PreferencePages/DlgSettingsWorkbenchesImp.cpp
     PreferencePages/DlgSettingsAdvanced.cpp
+    PreferencePages/DlgSettingsCompatibilityProfiles.cpp
 )
 SET(Dialog_Settings_HPP_SRCS
     Dialogs/DlgOnlineHelpImp.h
@@ -656,6 +657,7 @@ SET(Dialog_Settings_HPP_SRCS
     PreferencePages/DlgSettingsViewColor.h
     PreferencePages/DlgSettingsWorkbenchesImp.h
     PreferencePages/DlgSettingsAdvanced.h
+    PreferencePages/DlgSettingsCompatibilityProfiles.h
 )
 SET(Dialog_Settings_SRCS
     ${Dialog_Settings_CPP_SRCS}
@@ -891,6 +893,7 @@ SET(Navigation_CPP_SRCS
     Navigation/BlenderNavigationStyle.cpp
     Navigation/SiemensNXNavigationStyle.cpp
     Navigation/SolidWorksNavigationStyle.cpp
+    Navigation/CreoInspiredNavigationStyle.cpp
     Navigation/MayaGestureNavigationStyle.cpp
     Navigation/OpenCascadeNavigationStyle.cpp
     Navigation/OpenSCADNavigationStyle.cpp
@@ -1308,6 +1311,7 @@ SET(FreeCADGui_CPP_SRCS
     SpaceballEvent.cpp
     StatusBarLabel.cpp
     PreferencePackManager.cpp
+    CompatibilityProfileManager.cpp
     ProgramInformation.cpp
     Thumbnail.cpp
     Utilities.cpp

@@ -7,6 +7,8 @@ SET(Stylesheets_Files
 SET(Parameters_Files
     "parameters/FreeCAD Dark.yaml"
     "parameters/FreeCAD Light.yaml"
+    "parameters/Creo Inspired.yaml"
+    "parameters/SolidWorks Inspired.yaml"
 )
 
 SET(Overlay_Stylesheets_Files

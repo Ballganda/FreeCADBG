@@ -45,6 +45,7 @@
 #include "PreferencePages/DlgSettingsWorkbenchesImp.h"
 #include "PreferencePages/DlgSettingsAdvanced.h"
 #include "PreferencePages/DlgSettingsPDF.h"
+#include "PreferencePages/DlgSettingsCompatibilityProfiles.h"
 
 #include "Dialogs/DlgToolbarsImp.h"
 #include "Dialogs/DlgActionsImp.h"
@@ -74,6 +75,7 @@ WidgetFactorySupplier::WidgetFactorySupplier()
     //
     new PrefPageProducer<DlgSettingsGeneral>          ( QT_TRANSLATE_NOOP("QObject","General") );
     DlgSettingsGeneral::attachObserver();
+    new PrefPageProducer<DlgSettingsCompatibilityProfiles>( QT_TRANSLATE_NOOP("QObject","General") );
     new PrefPageProducer<DlgSettingsDocumentImp>      ( QT_TRANSLATE_NOOP("QObject","General") );
     new PrefPageProducer<DlgSettingsSelection>        ( QT_TRANSLATE_NOOP("QObject","General") );
     new PrefPageProducer<DlgCustomKeyboardImp>        ( QT_TRANSLATE_NOOP("QObject","General") );
