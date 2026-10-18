@@ -64,8 +64,8 @@ public:
     /** Curated facade map for the given profile (may be empty). */
     std::vector<CommandFacadeEntry> commandFacade(const std::string& profileId) const;
 
-    /** Run a FreeCAD command by facade label or by FreeCAD command name. */
-    bool runCommand(const std::string& vendorLabelOrCommand) const;
+    /** Invoke a FreeCAD command by facade label or by FreeCAD command name. */
+    bool invokeFacadeCommand(const std::string& vendorLabelOrCommand) const;
 
 private:
     void ensureProfiles();

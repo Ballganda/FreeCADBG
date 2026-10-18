@@ -207,12 +207,11 @@ bool CompatibilityProfileManager::apply(const std::string& profileId)
         reloadUiState();
     }
 
-    auto* packs = Application::Instance->prefPackManager();
-    if (!packs) {
-        throw Base::RuntimeError("Preference pack manager is not available");
-    }
-
     if (!profile->preferencePackName.empty()) {
+        auto* packs = Application::Instance->prefPackManager();
+        if (!packs) {
+            throw Base::RuntimeError("Preference pack manager is not available");
+        }
         if (!packs->apply(profile->preferencePackName)) {
             Base::Console().warning(
                 "CompatibilityProfiles",
@@ -223,8 +222,6 @@ bool CompatibilityProfileManager::apply(const std::string& profileId)
         }
     }
 
-    setActiveProfile(profileId);
-    // Preserve the active profile id after pack apply (packs do not touch this group).
     setActiveProfile(profileId);
     reloadUiState();
 
@@ -276,7 +273,7 @@ std::string CompatibilityProfileManager::resolveCommand(const std::string& vendo
     return vendorLabel;
 }
 
-bool CompatibilityProfileManager::runCommand(const std::string& vendorLabelOrCommand) const
+bool CompatibilityProfileManager::invokeFacadeCommand(const std::string& vendorLabelOrCommand) const
 {
     const std::string commandName = resolveCommand(vendorLabelOrCommand);
     CommandManager& mgr = Application::Instance->commandManager();
