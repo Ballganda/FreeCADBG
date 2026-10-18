@@ -81,3 +81,29 @@ the LibPack, build `FreeCAD` / `FreeCADMain`, and run `bin\FreeCAD.exe`.
 3. Apply SolidWorks Inspired → SolidWorks navigation, light theme accents.
 4. Revert → previous user baseline returns.
 5. Restart once if a viewer does not pick up navigation immediately.
+
+## Verified on Linux (this branch)
+
+```bash
+python3 tools/check_compatibility_profiles.py
+pixi install
+pixi run configure-release
+cmake --build build/release -j2
+cmake --install build/release
+# Packs + command present; Creo/SW navigation types register:
+xvfb-run -a .pixi/envs/default/bin/FreeCAD /path/to/smoke.FCMacro
+```
+
+Navigation registration smoke (PASS):
+
+- `view.setNavigationType("Gui::CreoInspiredNavigationStyle")`
+- `view.setNavigationType("Gui::SolidWorksNavigationStyle")`
+- Resource packs: `Creo Inspired`, `SolidWorks Inspired`, `FreeCAD Native`
+- Command registered: `Std_CompatibilityProfiles`
+
+## Windows .exe status
+
+A Windows installer/portable `.exe` was **not** produced in the Linux cloud agent.
+Use Option A/B/C above on a Windows host or GitHub Actions `windows-2022` runner.
+Existing packaging hooks already cover Windows (`package/bundle/windows/`,
+`.github/workflows/sub_buildWindows.yml`); no new cross-compile path was added.
