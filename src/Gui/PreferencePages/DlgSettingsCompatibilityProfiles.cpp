@@ -7,8 +7,9 @@
 
 #include "DlgSettingsCompatibilityProfiles.h"
 
-#include <QHBoxLayout>
 #include <QComboBox>
+#include <QEvent>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QListWidget>
 #include <QMessageBox>
