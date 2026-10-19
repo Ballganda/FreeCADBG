@@ -46,6 +46,7 @@
 #include "Dialogs/DlgParameterImp.h"
 #include "Dialogs/DlgPreferencesImp.h"
 #include "Dialogs/DlgUnitsCalculatorImp.h"
+#include "CompatibilityProfileManager.h"
 #include "GuiConsole.h"
 #include "MainWindow.h"
 #include "OnlineDocumentation.h"
@@ -493,6 +494,38 @@ void StdCmdDlgPreferences::activated(int iMsg)
     if (cDlg.exec()) {
         cDlg.activeGroupPage(groupName, index);
     }
+}
+
+//===========================================================================
+// Std_CompatibilityProfiles
+//===========================================================================
+DEF_STD_CMD(StdCmdCompatibilityProfiles)
+
+StdCmdCompatibilityProfiles::StdCmdCompatibilityProfiles()
+    : Command("Std_CompatibilityProfiles")
+{
+    sGroup = "Tools";
+    sMenuText = QT_TR_NOOP("Compatibility &Profiles");
+    sToolTipText = QT_TR_NOOP(
+        "Opens Compatibility Profiles to switch FreeCAD Native, Creo Inspired, or "
+        "SolidWorks Inspired presentation stacks"
+    );
+    sWhatsThis = "Std_CompatibilityProfiles";
+    sStatusTip = sToolTipText;
+    sPixmap = "preferences-desktop-theme";
+    eType = 0;
+}
+
+void StdCmdCompatibilityProfiles::activated(int iMsg)
+{
+    Q_UNUSED(iMsg);
+
+    Gui::Dialog::DlgPreferencesImp cDlg(getMainWindow());
+    cDlg.activateGroupPageByPageName(
+        QStringLiteral("General"),
+        QStringLiteral("Gui::Dialog::DlgSettingsCompatibilityProfiles")
+    );
+    cDlg.exec();
 }
 
 //===========================================================================
@@ -1099,6 +1132,7 @@ void CreateStdCommands()
 
     rcCmdMgr.addCommand(new StdCmdDlgParameter());
     rcCmdMgr.addCommand(new StdCmdDlgPreferences());
+    rcCmdMgr.addCommand(new StdCmdCompatibilityProfiles());
     rcCmdMgr.addCommand(new StdCmdDlgCustomize());
     rcCmdMgr.addCommand(new StdCmdCommandLine());
     rcCmdMgr.addCommand(new StdCmdWorkbench());

@@ -811,6 +811,7 @@ MenuItem* StdWorkbench::setupMenuBar() const
           << "Separator"
           << "Std_ProjectUtil"
           << "Std_DlgParameter"
+          << "Std_CompatibilityProfiles"
           << "Std_DlgCustomize";
 
     // Macro
@@ -924,8 +925,8 @@ ToolBarItem* StdWorkbench::setupCommandBars() const
     // Special Ops
     auto macro = new ToolBarItem(root);
     macro->setCommand("Special Ops");
-    *macro << "Std_DlgParameter" << "Std_DlgPreferences" << "Std_DlgMacroRecord"
-           << "Std_DlgMacroExecute" << "Std_DlgCustomize";
+    *macro << "Std_DlgParameter" << "Std_DlgPreferences" << "Std_CompatibilityProfiles"
+           << "Std_DlgMacroRecord" << "Std_DlgMacroExecute" << "Std_DlgCustomize";
 
     return root;
 }

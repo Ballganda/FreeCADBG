@@ -48,6 +48,7 @@ class MDIView;
 class MainWindow;
 class MenuItem;
 class PreferencePackManager;
+class CompatibilityProfileManager;
 class ViewProvider;
 class ViewProviderDocumentObject;
 
@@ -268,6 +269,7 @@ public:
     //@}
 
     Gui::PreferencePackManager* prefPackManager();
+    Gui::CompatibilityProfileManager* compatibilityProfileManager();
     Gui::StyleParameters::ParameterManager* styleParameterManager();
 
     /** @name Init, Destruct an Access methods */

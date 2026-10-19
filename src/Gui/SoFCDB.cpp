@@ -220,6 +220,7 @@ void Gui::SoFCDB::init()
     RevitNavigationStyle::init();
     SiemensNXNavigationStyle::init();
     SolidWorksNavigationStyle::init();
+    CreoInspiredNavigationStyle::init();
     TinkerCADNavigationStyle::init();
     TouchpadNavigationStyle::init();
 
