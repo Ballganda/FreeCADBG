@@ -82,6 +82,13 @@ def main() -> None:
         fail("RibbonCatalog.cpp must define separate creoLayout and solidWorksLayout")
     if '"creo_model"' not in catalog or '"sw_features"' not in catalog:
         fail("RibbonCatalog.cpp missing Creo Model / SolidWorks Features tab ids")
+    if "splitLarge" not in catalog or "smallBtn" not in catalog:
+        fail("RibbonCatalog.cpp must define splitLarge and smallBtn helpers")
+    widget = (ROOT / "src" / "Gui" / "RibbonWidget.cpp").read_text(encoding="utf-8")
+    if "RibbonSplitButton" not in widget:
+        fail("RibbonWidget.cpp must implement RibbonSplitButton")
+    if "RibbonControlSize::Small" not in widget:
+        fail("RibbonWidget.cpp must pack Small controls in a 2x2 grid")
 
     prefs = (
         ROOT / "src" / "Gui" / "PreferencePages" / "DlgSettingsCompatibilityProfiles.cpp"

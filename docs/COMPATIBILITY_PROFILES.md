@@ -38,6 +38,15 @@ Creo Inspired and SolidWorks Inspired do **not** share one skeleton:
   - `HideClassicToolbars` (default true)
 - Source layout: `RibbonDefinition.h`, `RibbonCatalog`, `RibbonWidget`, `RibbonManager`.
 
+### Ribbon control types
+
+- **Large** — tall icon+text button (primary actions).
+- **Small (2×2)** — consecutive small controls pack into a 2×2 cell that uses the
+  same footprint as one large button.
+- **Split** — Creo-style control: click the face to run the active command; use the
+  chevron menu to change the active command (selection is remembered under
+  `CompatibilityProfiles/RibbonSplitActive`).
+
 Buttons call FreeCAD commands; some stay disabled until the matching workbench
 (PartDesign, Sketcher, Part) has registered that command.
 

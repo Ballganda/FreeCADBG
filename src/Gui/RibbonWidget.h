@@ -18,8 +18,9 @@ namespace Gui
 {
 
 /**
- * Simple ribbon: tab bar + one page of labeled command groups per tab.
- * Buttons reuse Command QActions so enablement stays in sync.
+ * Ribbon: tab bar + pages of command groups.
+ * Supports large buttons, 2x2 small packing, and Creo-style split buttons
+ * (click active face / dropdown to change active command).
  */
 class RibbonWidget: public QWidget
 {

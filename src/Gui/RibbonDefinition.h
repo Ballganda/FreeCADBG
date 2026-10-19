@@ -13,7 +13,7 @@
 namespace Gui
 {
 
-/** One command button in a ribbon group. */
+/** One command entry (face label and/or split-menu item). */
 struct RibbonCommandItem
 {
     /** FreeCAD command name (e.g. Std_New). Empty means a reserved empty slot. */
@@ -22,13 +22,41 @@ struct RibbonCommandItem
     std::string label;
 };
 
-/** Named group of commands (left-to-right within a tab). */
+/** Visual size of a ribbon control. Large occupies the same footprint as a 2x2 of Small. */
+enum class RibbonControlSize
+{
+    Large,
+    Small,
+};
+
+/**
+ * A control in a ribbon group.
+ * - Button: single command; size Large or Small.
+ * - SplitButton: primary click runs the active command; chevron menu picks/changes
+ *   the active command (Creo-style). commands[0] is the initial active item.
+ */
+struct RibbonControlDef
+{
+    enum class Kind
+    {
+        Button,
+        SplitButton,
+    };
+
+    Kind kind {Kind::Button};
+    RibbonControlSize size {RibbonControlSize::Large};
+    std::vector<RibbonCommandItem> commands;
+    /** Stable id for remembering the last-selected split active command. */
+    std::string splitId;
+};
+
+/** Named group of controls (left-to-right within a tab). */
 struct RibbonGroupDef
 {
     /** Stable id so the same group stays in the same place across profiles. */
     std::string slotId;
     std::string title;
-    std::vector<RibbonCommandItem> commands;
+    std::vector<RibbonControlDef> controls;
 };
 
 /** One ribbon tab. */

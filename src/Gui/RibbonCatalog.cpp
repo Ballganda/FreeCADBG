@@ -7,6 +7,10 @@
 
 #include "RibbonCatalog.h"
 
+#include <initializer_list>
+#include <utility>
+#include <vector>
+
 namespace Gui
 {
 namespace
@@ -21,15 +25,62 @@ RibbonCommandItem cmd(const char* name, const char* label = "")
     return {name, label ? label : ""};
 }
 
-RibbonGroupDef group(const char* slotId, const char* title, std::vector<RibbonCommandItem> commands)
+RibbonControlDef largeBtn(const char* name, const char* label = "")
 {
-    return {slotId, title, std::move(commands)};
+    RibbonControlDef control;
+    control.kind = RibbonControlDef::Kind::Button;
+    control.size = RibbonControlSize::Large;
+    control.commands = {cmd(name, label)};
+    return control;
+}
+
+RibbonControlDef smallBtn(const char* name, const char* label = "")
+{
+    RibbonControlDef control;
+    control.kind = RibbonControlDef::Kind::Button;
+    control.size = RibbonControlSize::Small;
+    control.commands = {cmd(name, label)};
+    return control;
+}
+
+RibbonControlDef splitLarge(
+    const char* splitId,
+    std::initializer_list<RibbonCommandItem> items
+)
+{
+    RibbonControlDef control;
+    control.kind = RibbonControlDef::Kind::SplitButton;
+    control.size = RibbonControlSize::Large;
+    control.splitId = splitId;
+    control.commands.assign(items.begin(), items.end());
+    return control;
+}
+
+RibbonControlDef splitSmall(
+    const char* splitId,
+    std::initializer_list<RibbonCommandItem> items
+)
+{
+    RibbonControlDef control;
+    control.kind = RibbonControlDef::Kind::SplitButton;
+    control.size = RibbonControlSize::Small;
+    control.splitId = splitId;
+    control.commands.assign(items.begin(), items.end());
+    return control;
+}
+
+RibbonGroupDef group(
+    const char* slotId,
+    const char* title,
+    std::vector<RibbonControlDef> controls
+)
+{
+    return {slotId, title, std::move(controls)};
 }
 
 /**
- * Creo-inspired flow (part mode):
+ * Creo-inspired flow with large / 2x2 small / split controls.
  * Model → Analysis → Annotate → Tools → View
- * On Model: Get Data / Datums / Shapes / Editing / Operations.
  */
 RibbonLayout creoLayout()
 {
@@ -44,50 +95,67 @@ RibbonLayout creoLayout()
             "creo_get_data",
             "Get Data",
             {
-                cmd("Std_New", "New"),
-                cmd("Std_Open", "Open"),
-                cmd("Std_Save", "Save"),
+                splitLarge(
+                    "creo_get_data",
+                    {
+                        cmd("Std_Open", "Open"),
+                        cmd("Std_New", "New"),
+                        cmd("Std_Save", "Save"),
+                    }
+                ),
             }
         ),
         group(
             "creo_datums",
             "Datums",
             {
-                cmd("PartDesign_Body", "Body"),
-                cmd("PartDesign_Plane", "Plane"),
-                cmd("PartDesign_Line", "Axis"),
-                cmd("PartDesign_Point", "Point"),
+                largeBtn("PartDesign_Body", "Body"),
+                // 2x2 cell beside the large Body button
+                smallBtn("PartDesign_Plane", "Plane"),
+                smallBtn("PartDesign_Line", "Axis"),
+                smallBtn("PartDesign_Point", "Point"),
+                smallBtn("Sketcher_NewSketch", "Sketch"),
             }
         ),
         group(
             "creo_shapes",
             "Shapes",
             {
-                cmd("Sketcher_NewSketch", "Sketch"),
-                cmd("PartDesign_Pad", "Extrude"),
-                cmd("PartDesign_Revolution", "Revolve"),
-                cmd("PartDesign_AdditivePipe", "Sweep"),
-                cmd("PartDesign_AdditiveLoft", "Blend"),
+                splitLarge(
+                    "creo_shapes",
+                    {
+                        cmd("PartDesign_Pad", "Extrude"),
+                        cmd("PartDesign_Revolution", "Revolve"),
+                        cmd("PartDesign_AdditivePipe", "Sweep"),
+                        cmd("PartDesign_AdditiveLoft", "Blend"),
+                    }
+                ),
+                largeBtn("Sketcher_NewSketch", "Sketch"),
             }
         ),
         group(
             "creo_editing",
             "Editing",
             {
-                cmd("PartDesign_Pocket", "Cut"),
-                cmd("PartDesign_Fillet", "Round"),
-                cmd("PartDesign_Chamfer", "Chamfer"),
-                cmd("PartDesign_Mirrored", "Mirror"),
+                splitLarge(
+                    "creo_editing",
+                    {
+                        cmd("PartDesign_Fillet", "Round"),
+                        cmd("PartDesign_Chamfer", "Chamfer"),
+                        cmd("PartDesign_Pocket", "Cut"),
+                        cmd("PartDesign_Mirrored", "Mirror"),
+                    }
+                ),
             }
         ),
         group(
             "creo_operations",
             "Operations",
             {
-                cmd("Part_Fuse", "Merge"),
-                cmd("Part_Cut", "Cut"),
-                cmd("Part_Common", "Intersect"),
-                cmd("Std_Delete", "Delete"),
+                smallBtn("Part_Fuse", "Merge"),
+                smallBtn("Part_Cut", "Cut"),
+                smallBtn("Part_Common", "Intersect"),
+                smallBtn("Std_Delete", "Delete"),
             }
         ),
     };
@@ -101,8 +169,8 @@ RibbonLayout creoLayout()
             "creo_measure",
             "Measure",
             {
-                cmd("Std_Measure", "Measure"),
-                cmd("Part_CheckGeometry", "Check Geometry"),
+                largeBtn("Std_Measure", "Measure"),
+                largeBtn("Part_CheckGeometry", "Check Geometry"),
             }
         ),
     };
@@ -116,8 +184,8 @@ RibbonLayout creoLayout()
             "creo_annotate",
             "Annotations",
             {
-                cmd("Part_Section", "Section"),
-                cmd("Std_SelBoundingBox", "Show Bound Box"),
+                smallBtn("Part_Section", "Section"),
+                smallBtn("Std_SelBoundingBox", "Bound Box"),
             }
         ),
     };
@@ -131,16 +199,16 @@ RibbonLayout creoLayout()
             "creo_edit",
             "Edit",
             {
-                cmd("Std_Undo", "Undo"),
-                cmd("Std_Redo", "Redo"),
+                smallBtn("Std_Undo", "Undo"),
+                smallBtn("Std_Redo", "Redo"),
             }
         ),
         group(
             "creo_options",
             "Utilities",
             {
-                cmd("Std_DlgPreferences", "Options"),
-                cmd("Std_DlgParameter", "Parameters"),
+                largeBtn("Std_DlgPreferences", "Options"),
+                smallBtn("Std_DlgParameter", "Parameters"),
             }
         ),
     };
@@ -154,19 +222,27 @@ RibbonLayout creoLayout()
             "creo_orient",
             "Orientation",
             {
-                cmd("Std_ViewFront", "Front"),
-                cmd("Std_ViewTop", "Top"),
-                cmd("Std_ViewRight", "Right"),
-                cmd("Std_ViewIsometric", "Default Orient"),
+                splitLarge(
+                    "creo_orient",
+                    {
+                        cmd("Std_ViewIsometric", "Default Orient"),
+                        cmd("Std_ViewFront", "Front"),
+                        cmd("Std_ViewTop", "Top"),
+                        cmd("Std_ViewRight", "Right"),
+                    }
+                ),
+                smallBtn("Std_ViewFront", "Front"),
+                smallBtn("Std_ViewTop", "Top"),
+                smallBtn("Std_ViewRight", "Right"),
+                smallBtn("Std_ViewFitAll", "Refit"),
             }
         ),
         group(
             "creo_model_display",
             "Model Display",
             {
-                cmd("Std_ViewFitAll", "Refit"),
-                cmd("Std_DrawStyle", "Display Style"),
-                cmd("Std_ViewFullscreen", "Fullscreen"),
+                largeBtn("Std_DrawStyle", "Display Style"),
+                smallBtn("Std_ViewFullscreen", "Fullscreen"),
             }
         ),
     };
@@ -176,9 +252,8 @@ RibbonLayout creoLayout()
 }
 
 /**
- * SolidWorks-inspired flow (part mode):
+ * SolidWorks-inspired flow with large / 2x2 / split controls.
  * Features → Sketch → Evaluate → View → File
- * On Features: Sketch | Features | Reference Geometry | Combine.
  */
 RibbonLayout solidWorksLayout()
 {
@@ -193,40 +268,57 @@ RibbonLayout solidWorksLayout()
             "sw_sketch_entry",
             "Sketch",
             {
-                cmd("Sketcher_NewSketch", "Sketch"),
-                cmd("Sketcher_LeaveSketch", "Exit Sketch"),
+                largeBtn("Sketcher_NewSketch", "Sketch"),
+                smallBtn("Sketcher_LeaveSketch", "Exit Sketch"),
             }
         ),
         group(
             "sw_features",
             "Features",
             {
-                cmd("PartDesign_Body", "Boss/Base"),
-                cmd("PartDesign_Pad", "Extruded Boss/Base"),
-                cmd("PartDesign_Pocket", "Extruded Cut"),
-                cmd("PartDesign_Revolution", "Revolved Boss/Base"),
-                cmd("PartDesign_Fillet", "Fillet"),
-                cmd("PartDesign_Chamfer", "Chamfer"),
-                cmd("PartDesign_Mirrored", "Mirror"),
-                cmd("PartDesign_LinearPattern", "Linear Pattern"),
+                splitLarge(
+                    "sw_features_boss",
+                    {
+                        cmd("PartDesign_Pad", "Extruded Boss/Base"),
+                        cmd("PartDesign_Revolution", "Revolved Boss/Base"),
+                        cmd("PartDesign_Body", "Boss/Base"),
+                    }
+                ),
+                splitLarge(
+                    "sw_features_cut",
+                    {
+                        cmd("PartDesign_Pocket", "Extruded Cut"),
+                        cmd("PartDesign_Fillet", "Fillet"),
+                        cmd("PartDesign_Chamfer", "Chamfer"),
+                    }
+                ),
+                smallBtn("PartDesign_Mirrored", "Mirror"),
+                smallBtn("PartDesign_LinearPattern", "L Pattern"),
+                smallBtn("PartDesign_Plane", "Plane"),
+                smallBtn("PartDesign_Line", "Axis"),
             }
         ),
         group(
             "sw_reference",
             "Reference Geometry",
             {
-                cmd("PartDesign_Plane", "Plane"),
-                cmd("PartDesign_Line", "Axis"),
-                cmd("PartDesign_Point", "Point"),
+                smallBtn("PartDesign_Plane", "Plane"),
+                smallBtn("PartDesign_Line", "Axis"),
+                smallBtn("PartDesign_Point", "Point"),
             }
         ),
         group(
             "sw_boolean",
             "Combine",
             {
-                cmd("Part_Fuse", "Combine"),
-                cmd("Part_Cut", "Subtract"),
-                cmd("Part_Common", "Common"),
+                splitSmall(
+                    "sw_boolean",
+                    {
+                        cmd("Part_Fuse", "Combine"),
+                        cmd("Part_Cut", "Subtract"),
+                        cmd("Part_Common", "Common"),
+                    }
+                ),
             }
         ),
     };
@@ -240,18 +332,18 @@ RibbonLayout solidWorksLayout()
             "sw_sketch_tools",
             "Sketch",
             {
-                cmd("Sketcher_NewSketch", "Sketch"),
-                cmd("Sketcher_LeaveSketch", "Exit Sketch"),
-                cmd("Sketcher_ViewSketch", "Normal To"),
+                largeBtn("Sketcher_NewSketch", "Sketch"),
+                smallBtn("Sketcher_LeaveSketch", "Exit Sketch"),
+                smallBtn("Sketcher_ViewSketch", "Normal To"),
             }
         ),
         group(
             "sw_sketch_edit",
             "Edit",
             {
-                cmd("Std_Undo", "Undo"),
-                cmd("Std_Redo", "Redo"),
-                cmd("Std_Delete", "Delete"),
+                smallBtn("Std_Undo", "Undo"),
+                smallBtn("Std_Redo", "Redo"),
+                smallBtn("Std_Delete", "Delete"),
             }
         ),
     };
@@ -265,8 +357,8 @@ RibbonLayout solidWorksLayout()
             "sw_evaluate",
             "Evaluate",
             {
-                cmd("Std_Measure", "Measure"),
-                cmd("Part_CheckGeometry", "Check"),
+                largeBtn("Std_Measure", "Measure"),
+                largeBtn("Part_CheckGeometry", "Check"),
             }
         ),
     };
@@ -280,19 +372,19 @@ RibbonLayout solidWorksLayout()
             "sw_standard_views",
             "Standard Views",
             {
-                cmd("Std_ViewFront", "Front"),
-                cmd("Std_ViewTop", "Top"),
-                cmd("Std_ViewRight", "Right"),
-                cmd("Std_ViewIsometric", "Isometric"),
-                cmd("Std_ViewFitAll", "Zoom to Fit"),
+                largeBtn("Std_ViewIsometric", "Isometric"),
+                smallBtn("Std_ViewFront", "Front"),
+                smallBtn("Std_ViewTop", "Top"),
+                smallBtn("Std_ViewRight", "Right"),
+                smallBtn("Std_ViewFitAll", "Zoom to Fit"),
             }
         ),
         group(
             "sw_display",
             "Display",
             {
-                cmd("Std_DrawStyle", "Display Style"),
-                cmd("Std_ViewFullscreen", "Full Screen"),
+                largeBtn("Std_DrawStyle", "Display Style"),
+                smallBtn("Std_ViewFullscreen", "Full Screen"),
             }
         ),
     };
@@ -306,16 +398,16 @@ RibbonLayout solidWorksLayout()
             "sw_file",
             "File",
             {
-                cmd("Std_New", "New"),
-                cmd("Std_Open", "Open"),
-                cmd("Std_Save", "Save"),
+                smallBtn("Std_New", "New"),
+                smallBtn("Std_Open", "Open"),
+                smallBtn("Std_Save", "Save"),
             }
         ),
         group(
             "sw_options",
             "Options",
             {
-                cmd("Std_DlgPreferences", "Options"),
+                largeBtn("Std_DlgPreferences", "Options"),
             }
         ),
     };
@@ -324,7 +416,7 @@ RibbonLayout solidWorksLayout()
     return layout;
 }
 
-/** FreeCAD-native ribbon: mirrors common workbench toolbar groups. */
+/** FreeCAD-native ribbon with mixed large / small packing. */
 RibbonLayout nativeLayout()
 {
     RibbonLayout layout;
@@ -338,43 +430,48 @@ RibbonLayout nativeLayout()
             "fc_file",
             "File",
             {
-                cmd("Std_New"),
-                cmd("Std_Open"),
-                cmd("Std_Save"),
+                largeBtn("Std_New"),
+                smallBtn("Std_Open"),
+                smallBtn("Std_Save"),
             }
         ),
         group(
             "fc_edit",
             "Edit",
             {
-                cmd("Std_Undo"),
-                cmd("Std_Redo"),
-                cmd("Std_Delete"),
+                smallBtn("Std_Undo"),
+                smallBtn("Std_Redo"),
+                smallBtn("Std_Delete"),
             }
         ),
         group(
             "fc_view",
             "View",
             {
-                cmd("Std_ViewFitAll"),
-                cmd("Std_ViewIsometric"),
+                largeBtn("Std_ViewFitAll"),
+                largeBtn("Std_ViewIsometric"),
             }
         ),
         group(
             "fc_model",
             "Part Design",
             {
-                cmd("Sketcher_NewSketch"),
-                cmd("PartDesign_Body"),
-                cmd("PartDesign_Pad"),
-                cmd("PartDesign_Pocket"),
+                splitLarge(
+                    "fc_model_features",
+                    {
+                        cmd("PartDesign_Pad", "Pad"),
+                        cmd("PartDesign_Pocket", "Pocket"),
+                        cmd("PartDesign_Body", "Body"),
+                    }
+                ),
+                largeBtn("Sketcher_NewSketch"),
             }
         ),
         group(
             "fc_prefs",
             "Preferences",
             {
-                cmd("Std_DlgPreferences"),
+                largeBtn("Std_DlgPreferences"),
             }
         ),
     };
@@ -388,19 +485,19 @@ RibbonLayout nativeLayout()
             "fc_standard_views",
             "Standard Views",
             {
-                cmd("Std_ViewFront"),
-                cmd("Std_ViewTop"),
-                cmd("Std_ViewRight"),
-                cmd("Std_ViewIsometric"),
-                cmd("Std_ViewFitAll"),
+                smallBtn("Std_ViewFront"),
+                smallBtn("Std_ViewTop"),
+                smallBtn("Std_ViewRight"),
+                smallBtn("Std_ViewIsometric"),
             }
         ),
         group(
             "fc_display",
             "Display",
             {
-                cmd("Std_DrawStyle"),
-                cmd("Std_ViewFullscreen"),
+                largeBtn("Std_DrawStyle"),
+                smallBtn("Std_ViewFullscreen"),
+                smallBtn("Std_ViewFitAll"),
             }
         ),
     };
