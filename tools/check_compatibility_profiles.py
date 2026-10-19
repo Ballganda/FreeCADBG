@@ -20,13 +20,17 @@ REQUIRED_THEMES = (
     "Creo Inspired.yaml",
     "SolidWorks Inspired.yaml",
 )
-REQUIRED_NAV = (
+REQUIRED_SOURCES = (
     ROOT / "src" / "Gui" / "Navigation" / "CreoInspiredNavigationStyle.cpp",
     ROOT / "src" / "Gui" / "CompatibilityProfileManager.cpp",
     ROOT / "src" / "Gui" / "PreferencePages" / "DlgSettingsCompatibilityProfiles.cpp",
+    ROOT / "src" / "Gui" / "RibbonDefinition.h",
+    ROOT / "src" / "Gui" / "RibbonCatalog.h",
     ROOT / "src" / "Gui" / "RibbonCatalog.cpp",
-    ROOT / "src" / "Gui" / "RibbonManager.cpp",
+    ROOT / "src" / "Gui" / "RibbonWidget.h",
     ROOT / "src" / "Gui" / "RibbonWidget.cpp",
+    ROOT / "src" / "Gui" / "RibbonManager.h",
+    ROOT / "src" / "Gui" / "RibbonManager.cpp",
 )
 
 
@@ -58,7 +62,7 @@ def main() -> None:
         if "PrimaryColor:" not in text:
             fail(f"{path} has no PrimaryColor token")
 
-    for path in REQUIRED_NAV:
+    for path in REQUIRED_SOURCES:
         if not path.is_file():
             fail(f"missing source file {path}")
 
@@ -67,16 +71,24 @@ def main() -> None:
         fail("Gui CMakeLists.txt does not list CreoInspiredNavigationStyle.cpp")
     if "CompatibilityProfileManager.cpp" not in cmake_lists:
         fail("Gui CMakeLists.txt does not list CompatibilityProfileManager.cpp")
-    if "RibbonCatalog.cpp" not in cmake_lists:
-        fail("Gui CMakeLists.txt does not list RibbonCatalog.cpp")
-    if "RibbonManager.cpp" not in cmake_lists:
-        fail("Gui CMakeLists.txt does not list RibbonManager.cpp")
+    for ribbon_src in ("RibbonWidget.cpp", "RibbonCatalog.cpp", "RibbonManager.cpp"):
+        if ribbon_src not in cmake_lists:
+            fail(f"Gui CMakeLists.txt does not list {ribbon_src}")
 
     catalog = (ROOT / "src" / "Gui" / "RibbonCatalog.cpp").read_text(encoding="utf-8")
-    if "creoLayout" not in catalog or "solidWorksLayout" not in catalog:
-        fail("RibbonCatalog.cpp must define separate creoLayout and solidWorksLayout")
-    if "sharedSkeleton" in catalog:
-        fail("RibbonCatalog.cpp must not use a shared skeleton for Creo/SW ribbons")
+    if "sharedSkeleton" not in catalog:
+        fail("RibbonCatalog.cpp must use sharedSkeleton for same slots across profiles")
+    for slot in ('"file"', '"edit"', '"features"', '"home"', '"view"', '"model"'):
+        if slot not in catalog:
+            fail(f"RibbonCatalog.cpp missing shared slot {slot}")
+
+    prefs = (
+        ROOT / "src" / "Gui" / "PreferencePages" / "DlgSettingsCompatibilityProfiles.cpp"
+    ).read_text(encoding="utf-8")
+    if "Show ribbon" not in prefs or "Hide classic toolbars" not in prefs:
+        fail("preferences page missing ribbon checkboxes")
+    if "setRibbonEnabled" not in prefs or "setHideClassicToolbars" not in prefs:
+        fail("preferences page must wire ribbon checkboxes to RibbonManager")
 
     print("Compatibility Profiles data check passed.")
 

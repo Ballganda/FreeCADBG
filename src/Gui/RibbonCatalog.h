@@ -16,14 +16,13 @@ namespace Gui
 {
 
 /**
- * Builds per-profile ribbon layouts.
- * Creo Inspired and SolidWorks Inspired each use their own tab order and
- * left-to-right group flow (not a shared skeleton).
+ * Builds ribbon layouts where similar commands occupy the same tab/group slots
+ * for every compatibility profile (Creo Inspired, SolidWorks Inspired, Native).
  */
 class GuiExport RibbonCatalog
 {
 public:
-    /** Ribbon definition for the given compatibility profile id. */
+    /** Shared skeleton filled per profile; slot order is identical across profiles. */
     static RibbonLayout layoutForProfile(const std::string& profileId);
 };
 

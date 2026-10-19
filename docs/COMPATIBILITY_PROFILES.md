@@ -16,24 +16,27 @@ Each profile applies a Preference Pack stack:
   or `Gui::SolidWorksNavigationStyle`)
 - Curated shortcuts
 - Main-window dock/toolbar defaults
-- A **profile-specific ribbon** (see below)
+- Optional compatibility ribbon (same tab/group slots across profiles)
 
 ## Compatibility ribbon
 
-When **Show compatibility ribbon** is enabled (Preferences → Compatibility Profiles),
-FreeCAD shows a ribbon under the menu bar. Creo Inspired and SolidWorks Inspired do
-**not** share one skeleton:
+The ribbon is an optional command strip under the menu bar. Menus stay available.
 
-| Profile | Ribbon flow (tabs left → right) |
-|---------|----------------------------------|
-| **Creo Inspired** | Model → Analysis → Annotate → Tools → View. Model groups: Get Data, Datums, Shapes, Editing, Operations |
-| **SolidWorks Inspired** | Features → Sketch → Evaluate → View → File. Features groups: Sketch, Features, Reference Geometry, Combine |
-| **FreeCAD Native** | Home → View (FileCAD-style groups) |
+- Creo Inspired, SolidWorks Inspired, and FreeCAD Native share the same tab and group
+  slot ids (`home` / `view` / `model`, and groups such as `file`, `edit`, `features`).
+- The same FreeCAD commands sit in the same button indices. Only labels change so
+  Creo/SolidWorks users see familiar names while clicks stay in the same places.
+- Preferences → Compatibility Profiles:
+  - **Show ribbon (command strip under the menu bar)**
+  - **Hide classic toolbars while the ribbon is shown**
+- Preference keys under
+  `User parameter:BaseApp/Preferences/CompatibilityProfiles`:
+  - `ShowRibbon` (default true)
+  - `HideClassicToolbars` (default true)
+- Source layout: `RibbonDefinition.h`, `RibbonCatalog`, `RibbonWidget`, `RibbonManager`.
 
-Optional: **Hide classic toolbars while the ribbon is shown**.
-
-Buttons call FreeCAD commands; some are disabled until the matching workbench
-(PartDesign, Sketcher, Part) has loaded that command.
+Buttons call FreeCAD commands; some stay disabled until the matching workbench
+(PartDesign, Sketcher, Part) has registered that command.
 
 ## How to switch
 
@@ -41,7 +44,9 @@ Buttons call FreeCAD commands; some are disabled until the matching workbench
 2. Open **Tools → Compatibility Profiles**, or
    **Edit → Preferences → General → Compatibility Profiles**.
 3. Choose a profile and click **Apply profile**.
-4. Use **Revert to baseline** to restore the configuration captured before the first
+4. Optionally enable **Show ribbon** and **Hide classic toolbars while the ribbon is
+   shown**.
+5. Use **Revert to baseline** to restore the configuration captured before the first
    Apply in this profile session.
 
 The first Apply stores a baseline snapshot under the user FreeCAD config directory:
@@ -55,8 +60,7 @@ do not stack.
 
 Each profile includes a small curated map of vendor-facing labels to FreeCAD command
 names (for example `Zoom to Fit` → `Std_ViewFitAll`). The map is shown on the
-preferences page. The ribbon is the main spatial command layout; the facade list
-documents common label → command mappings.
+preferences page and mirrors the ribbon label overrides.
 
 ## Windows build and test
 
