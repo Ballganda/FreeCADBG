@@ -7,6 +7,7 @@
 
 #include "DlgSettingsCompatibilityProfiles.h"
 
+#include <QCheckBox>
 #include <QComboBox>
 #include <QEvent>
 #include <QHBoxLayout>
@@ -19,6 +20,7 @@
 #include <Base/Exception.h>
 #include <Gui/Application.h>
 #include <Gui/CompatibilityProfileManager.h>
+#include <Gui/RibbonManager.h>
 
 using namespace Gui::Dialog;
 
@@ -30,9 +32,10 @@ DlgSettingsCompatibilityProfiles::DlgSettingsCompatibilityProfiles(QWidget* pare
     auto* root = new QVBoxLayout(this);
 
     auto* intro = new QLabel(
-        tr("Compatibility Profiles switch theme, navigation, shortcuts, and layout "
-           "toward vendor-inspired habits. Geometry still uses the FreeCAD/OCCT kernel. "
-           "Names are inspired only and are not affiliated with PTC or Dassault Systemes."),
+        tr("Compatibility Profiles switch theme, navigation, shortcuts, layout, and an optional "
+           "ribbon strip toward vendor-inspired habits. Menus stay available. Geometry still uses "
+           "the FreeCAD/OCCT kernel. Names are inspired only and are not affiliated with PTC or "
+           "Dassault Systemes."),
         this
     );
     intro->setWordWrap(true);
@@ -52,6 +55,12 @@ DlgSettingsCompatibilityProfiles::DlgSettingsCompatibilityProfiles(QWidget* pare
     statusLabel->setWordWrap(true);
     root->addWidget(statusLabel);
 
+    showRibbonCheck = new QCheckBox(tr("Show ribbon (command strip under the menu bar)"), this);
+    hideClassicToolbarsCheck =
+        new QCheckBox(tr("Hide classic toolbars while the ribbon is shown"), this);
+    root->addWidget(showRibbonCheck);
+    root->addWidget(hideClassicToolbarsCheck);
+
     root->addWidget(new QLabel(tr("Command facade (vendor label → FreeCAD command):"), this));
     facadeList = new QListWidget(this);
     facadeList->setMinimumHeight(140);
@@ -68,6 +77,12 @@ DlgSettingsCompatibilityProfiles::DlgSettingsCompatibilityProfiles(QWidget* pare
     connect(profileCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, [this](int index) {
         onProfileChanged(index);
     });
+    connect(showRibbonCheck, &QCheckBox::toggled, this, [this](bool) {
+        onRibbonOptionsChanged();
+    });
+    connect(hideClassicToolbarsCheck, &QCheckBox::toggled, this, [this](bool) {
+        onRibbonOptionsChanged();
+    });
     connect(applyButton, &QPushButton::clicked, this, &DlgSettingsCompatibilityProfiles::onApplyClicked);
     connect(revertButton, &QPushButton::clicked, this, &DlgSettingsCompatibilityProfiles::onRevertClicked);
 }
@@ -76,7 +91,7 @@ DlgSettingsCompatibilityProfiles::~DlgSettingsCompatibilityProfiles() = default;
 
 void DlgSettingsCompatibilityProfiles::saveSettings()
 {
-    // Apply is explicit via buttons so users can preview the description first.
+    onRibbonOptionsChanged();
 }
 
 void DlgSettingsCompatibilityProfiles::loadSettings()
@@ -103,6 +118,16 @@ void DlgSettingsCompatibilityProfiles::loadSettings()
     }
     profileCombo->setCurrentIndex(activeIndex);
     profileCombo->blockSignals(false);
+
+    if (auto* ribbon = RibbonManager::getInstance()) {
+        showRibbonCheck->blockSignals(true);
+        hideClassicToolbarsCheck->blockSignals(true);
+        showRibbonCheck->setChecked(ribbon->isRibbonEnabled());
+        hideClassicToolbarsCheck->setChecked(ribbon->hideClassicToolbars());
+        hideClassicToolbarsCheck->setEnabled(showRibbonCheck->isChecked());
+        showRibbonCheck->blockSignals(false);
+        hideClassicToolbarsCheck->blockSignals(false);
+    }
 
     onProfileChanged(profileCombo->currentIndex());
     refreshStatus();
@@ -140,6 +165,15 @@ void DlgSettingsCompatibilityProfiles::onProfileChanged(int index)
     }
 }
 
+void DlgSettingsCompatibilityProfiles::onRibbonOptionsChanged()
+{
+    hideClassicToolbarsCheck->setEnabled(showRibbonCheck->isChecked());
+    if (auto* ribbon = RibbonManager::getInstance()) {
+        ribbon->setRibbonEnabled(showRibbonCheck->isChecked());
+        ribbon->setHideClassicToolbars(hideClassicToolbarsCheck->isChecked());
+    }
+}
+
 void DlgSettingsCompatibilityProfiles::refreshStatus()
 {
     auto* manager = Application::Instance->compatibilityProfileManager();
@@ -167,6 +201,8 @@ void DlgSettingsCompatibilityProfiles::onApplyClicked()
     if (!manager) {
         return;
     }
+
+    onRibbonOptionsChanged();
 
     const auto profileId = profileCombo->currentData().toString().toStdString();
     try {

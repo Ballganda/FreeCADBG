@@ -24,6 +24,9 @@ REQUIRED_NAV = (
     ROOT / "src" / "Gui" / "Navigation" / "CreoInspiredNavigationStyle.cpp",
     ROOT / "src" / "Gui" / "CompatibilityProfileManager.cpp",
     ROOT / "src" / "Gui" / "PreferencePages" / "DlgSettingsCompatibilityProfiles.cpp",
+    ROOT / "src" / "Gui" / "RibbonCatalog.cpp",
+    ROOT / "src" / "Gui" / "RibbonManager.cpp",
+    ROOT / "src" / "Gui" / "RibbonWidget.cpp",
 )
 
 
@@ -64,6 +67,16 @@ def main() -> None:
         fail("Gui CMakeLists.txt does not list CreoInspiredNavigationStyle.cpp")
     if "CompatibilityProfileManager.cpp" not in cmake_lists:
         fail("Gui CMakeLists.txt does not list CompatibilityProfileManager.cpp")
+    if "RibbonCatalog.cpp" not in cmake_lists:
+        fail("Gui CMakeLists.txt does not list RibbonCatalog.cpp")
+    if "RibbonManager.cpp" not in cmake_lists:
+        fail("Gui CMakeLists.txt does not list RibbonManager.cpp")
+
+    catalog = (ROOT / "src" / "Gui" / "RibbonCatalog.cpp").read_text(encoding="utf-8")
+    if "creoLayout" not in catalog or "solidWorksLayout" not in catalog:
+        fail("RibbonCatalog.cpp must define separate creoLayout and solidWorksLayout")
+    if "sharedSkeleton" in catalog:
+        fail("RibbonCatalog.cpp must not use a shared skeleton for Creo/SW ribbons")
 
     print("Compatibility Profiles data check passed.")
 

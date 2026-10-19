@@ -17,6 +17,7 @@
 #include "Command.h"
 #include "DockWindowManager.h"
 #include "PreferencePackManager.h"
+#include "RibbonManager.h"
 #include "ToolBarManager.h"
 
 using namespace Gui;
@@ -169,6 +170,9 @@ void CompatibilityProfileManager::reloadUiState() const
     }
     if (auto* toolbars = ToolBarManager::getInstance()) {
         toolbars->restoreState();
+    }
+    if (auto* ribbon = RibbonManager::getInstance()) {
+        ribbon->syncFromActiveProfile();
     }
 }
 

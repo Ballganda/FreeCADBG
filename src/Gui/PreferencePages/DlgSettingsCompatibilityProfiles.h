@@ -10,6 +10,7 @@
 #include <Gui/PropertyPage.h>
 #include <QString>
 
+class QCheckBox;
 class QComboBox;
 class QLabel;
 class QListWidget;
@@ -43,12 +44,15 @@ private:
     void onApplyClicked();
     void onRevertClicked();
     void onProfileChanged(int index);
+    void onRibbonOptionsChanged();
 
 private:
     QComboBox* profileCombo {nullptr};
     QLabel* descriptionLabel {nullptr};
     QLabel* statusLabel {nullptr};
     QListWidget* facadeList {nullptr};
+    QCheckBox* showRibbonCheck {nullptr};
+    QCheckBox* hideClassicToolbarsCheck {nullptr};
     QPushButton* applyButton {nullptr};
     QPushButton* revertButton {nullptr};
 };

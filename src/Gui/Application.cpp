@@ -96,6 +96,7 @@
 #include "FreeCADGuiModulePy.h"
 #include "PreferencePackManager.h"
 #include "CompatibilityProfileManager.h"
+#include "RibbonManager.h"
 #include "PythonConsolePy.h"
 #include "MainWindowPy.h"
 #include "MDIViewPy.h"
@@ -733,6 +734,7 @@ Application::~Application()
     }
 #endif
     WorkbenchManager::destruct();
+    RibbonManager::destruct();
     WorkbenchManipulator::removeAll();
     SelectionSingleton::destruct();
     Translator::destruct();

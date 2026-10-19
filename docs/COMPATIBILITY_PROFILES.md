@@ -16,6 +16,24 @@ Each profile applies a Preference Pack stack:
   or `Gui::SolidWorksNavigationStyle`)
 - Curated shortcuts
 - Main-window dock/toolbar defaults
+- A **profile-specific ribbon** (see below)
+
+## Compatibility ribbon
+
+When **Show compatibility ribbon** is enabled (Preferences → Compatibility Profiles),
+FreeCAD shows a ribbon under the menu bar. Creo Inspired and SolidWorks Inspired do
+**not** share one skeleton:
+
+| Profile | Ribbon flow (tabs left → right) |
+|---------|----------------------------------|
+| **Creo Inspired** | Model → Analysis → Annotate → Tools → View. Model groups: Get Data, Datums, Shapes, Editing, Operations |
+| **SolidWorks Inspired** | Features → Sketch → Evaluate → View → File. Features groups: Sketch, Features, Reference Geometry, Combine |
+| **FreeCAD Native** | Home → View (FileCAD-style groups) |
+
+Optional: **Hide classic toolbars while the ribbon is shown**.
+
+Buttons call FreeCAD commands; some are disabled until the matching workbench
+(PartDesign, Sketcher, Part) has loaded that command.
 
 ## How to switch
 
@@ -37,7 +55,8 @@ do not stack.
 
 Each profile includes a small curated map of vendor-facing labels to FreeCAD command
 names (for example `Zoom to Fit` → `Std_ViewFitAll`). The map is shown on the
-preferences page. Full ribbon parity is out of scope for this phase.
+preferences page. The ribbon is the main spatial command layout; the facade list
+documents common label → command mappings.
 
 ## Windows build and test
 
@@ -79,8 +98,12 @@ the LibPack, build `FreeCAD` / `FreeCADMain`, and run `bin\FreeCAD.exe`.
 2. Apply Creo Inspired → theme darkens, Navigation style becomes Creo Inspired,
    middle-mouse rotate / Shift+middle pan / Ctrl+middle zoom.
 3. Apply SolidWorks Inspired → SolidWorks navigation, light theme accents.
-4. Revert → previous user baseline returns.
-5. Restart once if a viewer does not pick up navigation immediately.
+4. With **Show ribbon** on, Home / View / Model tabs appear under the menu bar;
+   Pad/Extrude/Boss labels differ by profile but stay in the same Model → Features slot.
+5. **Hide classic toolbars** hides File/Edit/View-style toolbars; turning the ribbon
+   off restores them.
+6. Revert → previous user baseline returns.
+7. Restart once if a viewer does not pick up navigation immediately.
 
 ## Verified on Linux (this branch)
 

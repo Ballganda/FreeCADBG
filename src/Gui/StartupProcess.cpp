@@ -51,6 +51,7 @@
 #include "FileDialog.h"
 #include "GuiApplication.h"
 #include "MainWindow.h"
+#include "RibbonManager.h"
 #include "Language/Translator.h"
 #include "Dialogs/DlgVersionMigrator.h"
 #include "FreeCADStyle.h"
@@ -512,6 +513,9 @@ void StartupPostProcess::activateWorkbench()
 
     // Reactivate the startup workbench
     guiApp.activateWorkbench(start.c_str());
+
+    // Compatibility ribbon (profile-driven command strip under the menu bar)
+    RibbonManager::getInstance()->install(mainWindow);
 }
 
 void StartupPostProcess::setStyleSheet()

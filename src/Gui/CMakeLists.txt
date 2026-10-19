@@ -1133,6 +1133,9 @@ SET(Widget_CPP_SRCS
     ElideCheckBox.cpp
     FontScaledSVG.cpp
     SplitButton.cpp
+    RibbonWidget.cpp
+    RibbonCatalog.cpp
+    RibbonManager.cpp
 )
 if(WIN32)
     SET(Widget_CPP_SRCS
@@ -1166,6 +1169,10 @@ SET(Widget_HPP_SRCS
     ElideCheckBox.h
     FontScaledSVG.h
     SplitButton.h
+    RibbonDefinition.h
+    RibbonCatalog.h
+    RibbonWidget.h
+    RibbonManager.h
 )
 SET(Widget_SRCS
     ${Widget_CPP_SRCS}
