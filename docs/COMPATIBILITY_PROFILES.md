@@ -16,16 +16,19 @@ Each profile applies a Preference Pack stack:
   or `Gui::SolidWorksNavigationStyle`)
 - Curated shortcuts
 - Main-window dock/toolbar defaults
-- Optional compatibility ribbon (same tab/group slots across profiles)
+- A **profile-specific ribbon** (Creo and SolidWorks each have their own flow)
 
 ## Compatibility ribbon
 
 The ribbon is an optional command strip under the menu bar. Menus stay available.
+Creo Inspired and SolidWorks Inspired do **not** share one skeleton:
 
-- Creo Inspired, SolidWorks Inspired, and FreeCAD Native share the same tab and group
-  slot ids (`home` / `view` / `model`, and groups such as `file`, `edit`, `features`).
-- The same FreeCAD commands sit in the same button indices. Only labels change so
-  Creo/SolidWorks users see familiar names while clicks stay in the same places.
+| Profile | Ribbon flow (tabs left → right) |
+|---------|----------------------------------|
+| **Creo Inspired** | Model → Analysis → Annotate → Tools → View. Model groups: Get Data, Datums, Shapes, Editing, Operations |
+| **SolidWorks Inspired** | Features → Sketch → Evaluate → View → File. Features groups: Sketch, Features, Reference Geometry, Combine |
+| **FreeCAD Native** | Home → View (FreeCAD-style groups) |
+
 - Preferences → Compatibility Profiles:
   - **Show ribbon (command strip under the menu bar)**
   - **Hide classic toolbars while the ribbon is shown**
@@ -102,8 +105,8 @@ the LibPack, build `FreeCAD` / `FreeCADMain`, and run `bin\FreeCAD.exe`.
 2. Apply Creo Inspired → theme darkens, Navigation style becomes Creo Inspired,
    middle-mouse rotate / Shift+middle pan / Ctrl+middle zoom.
 3. Apply SolidWorks Inspired → SolidWorks navigation, light theme accents.
-4. With **Show ribbon** on, Home / View / Model tabs appear under the menu bar;
-   Pad/Extrude/Boss labels differ by profile but stay in the same Model → Features slot.
+4. With **Show ribbon** on, Creo shows Model/Analysis/… tabs; SolidWorks shows
+   Features/Sketch/Evaluate/… tabs (different order and groups).
 5. **Hide classic toolbars** hides File/Edit/View-style toolbars; turning the ribbon
    off restores them.
 6. Revert → previous user baseline returns.

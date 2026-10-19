@@ -76,11 +76,12 @@ def main() -> None:
             fail(f"Gui CMakeLists.txt does not list {ribbon_src}")
 
     catalog = (ROOT / "src" / "Gui" / "RibbonCatalog.cpp").read_text(encoding="utf-8")
-    if "sharedSkeleton" not in catalog:
-        fail("RibbonCatalog.cpp must use sharedSkeleton for same slots across profiles")
-    for slot in ('"file"', '"edit"', '"features"', '"home"', '"view"', '"model"'):
-        if slot not in catalog:
-            fail(f"RibbonCatalog.cpp missing shared slot {slot}")
+    if "sharedSkeleton" in catalog:
+        fail("RibbonCatalog.cpp must not use a shared skeleton for Creo/SW ribbons")
+    if "creoLayout" not in catalog or "solidWorksLayout" not in catalog:
+        fail("RibbonCatalog.cpp must define separate creoLayout and solidWorksLayout")
+    if '"creo_model"' not in catalog or '"sw_features"' not in catalog:
+        fail("RibbonCatalog.cpp missing Creo Model / SolidWorks Features tab ids")
 
     prefs = (
         ROOT / "src" / "Gui" / "PreferencePages" / "DlgSettingsCompatibilityProfiles.cpp"
