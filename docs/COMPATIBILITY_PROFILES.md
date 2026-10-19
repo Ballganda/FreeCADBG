@@ -128,6 +128,11 @@ Navigation registration smoke (PASS):
 - Resource packs: `Creo Inspired`, `SolidWorks Inspired`, `FreeCAD Native`
 - Command registered: `Std_CompatibilityProfiles`
 
+Ribbon smoke (PASS, xvfb):
+
+- Toolbar object name `CompatibilityRibbon` with tabs Home / View / Model
+- Shared slots verified by `tools/check_compatibility_profiles.py`
+
 ## Windows .exe status
 
 A Windows installer/portable `.exe` was **not** produced in the Linux cloud agent.
