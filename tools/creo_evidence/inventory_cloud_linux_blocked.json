@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "inventory_id": "creo-7.0.3.0-ribbon-ux",
+  "generated_at_utc": "2026-10-25T07:57:00Z",
+  "agent_bc_id": "bc-24e00b8b-eea3-53e8-8eb4-ea183c6fa0a7",
+  "status": "blocked_host_mismatch",
+  "status_detail": "Task assumed DESKTOP-8I3RN1B Windows placement, but this run is a Cursor cloud Linux VM (hostname=cursor, uname=Linux). Creo PE paths are not on the local filesystem. No Creo UX strings were observed.",
+  "requested_target": {
+    "parametric_exe": "C:\\Program Files\\PTC\\Creo 7.0.3.0\\Parametric\\bin\\parametric.exe",
+    "xtop_exe": "C:\\Program Files\\PTC\\Creo 7.0.3.0\\Parametric\\bin\\xtop.exe",
+    "bin_dir": "C:\\Program Files\\PTC\\Creo 7.0.3.0\\Parametric\\bin"
+  },
+  "host": {
+    "expected": "DESKTOP-8I3RN1B (Windows)",
+    "actual_uname": "Linux cursor 6.12.94+",
+    "use_private_worker": false,
+    "private_worker_id": null,
+    "creo_path_accessible": false,
+    "mnt_c_present": false
+  },
+  "files_examined": [],
+  "parametric_exists": null,
+  "xtop_exists": null,
+  "parametric_is_small_launcher": null,
+  "bin_dir_exe_dll_listing": null,
+  "observed_model_tab_group_command_labels": [],
+  "observed_round_chamfer_family_strings": [],
+  "observed_nav_accelerator_strings": [],
+  "string_needles_searched": [
+    "Get Data",
+    "Datums",
+    "Shapes",
+    "Round",
+    "Chamfer",
+    "Model",
+    "Annotate",
+    "Extrude",
+    "Revolve",
+    "Sweep",
+    "Blend",
+    "Mirror"
+  ],
+  "gcad": {
+    "status": "ready_partial",
+    "package": "gcad-agents@0.1.0",
+    "server": "gcad@0.1.0",
+    "binary_session_open": false,
+    "tools_tried": [
+      {
+        "tool": "binary_session",
+        "result": "ok",
+        "notes": "No target open. Session capabilities reported."
+      },
+      {
+        "tool": "open_binary",
+        "path": "C:\\Program Files\\PTC\\Creo 7.0.3.0\\Parametric\\bin\\parametric.exe",
+        "result": "error",
+        "error": "path must be an absolute local filesystem path on this host"
+      },
+      {
+        "tool": "inspect_pe_layout",
+        "path": "C:\\Program Files\\PTC\\Creo 7.0.3.0\\Parametric\\bin\\parametric.exe",
+        "result": "error",
+        "error": "Expected an absolute filesystem path on this host."
+      },
+      {
+        "tool": "inspect_pe_resources",
+        "path": "C:\\Program Files\\PTC\\Creo 7.0.3.0\\Parametric\\bin\\parametric.exe",
+        "result": "error",
+        "error": "Expected an absolute filesystem path on this host."
+      },
+      {
+        "tool": "search_strings",
+        "result": "not_attempted",
+        "notes": "Requires open_binary target; open_binary failed."
+      },
+      {
+        "tool": "list_strings",
+        "result": "not_attempted",
+        "notes": "Requires open_binary target; open_binary failed."
+      }
+    ],
+    "deep_analysis_providers": {
+      "ghidra": {
+        "availability": "unavailable",
+        "code": "not_configured",
+        "reason": "GHIDRA_INSTALL_DIR is not set"
+      },
+      "hopper": {
+        "availability": "unavailable",
+        "code": "executable_missing",
+        "reason": "Hopper launcher missing at /opt/hopper/bin/Hopper"
+      },
+      "ida": {
+        "availability": "unavailable",
+        "code": "not_configured",
+        "reason": "REA_IDA_MCP_CONFIG not set"
+      }
+    },
+    "offline_pe_tools_available_without_provider": [
+      "inspect_pe_layout",
+      "inspect_pe_resources"
+    ],
+    "notes": "inspect_pe_* work on local PE files without Ghidra, but still require a host-local absolute path. They cannot reach Windows Program Files from this Linux VM."
+  },
+  "powershell_fallback": {
+    "attempted": false,
+    "reason": "No Windows shell on this host (powershell/pwsh/cmd not available; PowerShell cmdlets fail under bash)."
+  },
+  "self_hosted_worker_for_retry": {
+    "worker_id": "833d56bc-403a-5a5b-8d94-f263a269a52e",
+    "display_name": "c:\\Users\\user\\Projects\\freecadbg-1 @ DESKTOP-8I3RN1B",
+    "machine_display_name": "DESKTOP-8I3RN1B",
+    "os_label": "windows",
+    "eligible_for_subagent": true,
+    "shared_assignment_allowed": true,
+    "was_idle_at_check": true
+  },
+  "freecad_creoLayout_assumptions_not_creo_evidence": {
+    "source": "origin/cursor/compatibility-profiles-d60f src/Gui/RibbonCatalog.cpp creoLayout()",
+    "disclaimer": "These are FreeCAD Compatibility Profile labels already in-tree. They are NOT observed Creo 7.0.3.0 strings and must not be treated as inventory evidence.",
+    "model_tab_groups": [
+      "Get Data",
+      "Datums",
+      "Shapes",
+      "Editing",
+      "Operations"
+    ],
+    "model_tab_command_labels": [
+      "Open",
+      "New",
+      "Save",
+      "Body",
+      "Plane",
+      "Axis",
+      "Point",
+      "Sketch",
+      "Extrude",
+      "Revolve",
+      "Sweep",
+      "Blend",
+      "Round",
+      "Chamfer",
+      "Cut",
+      "Mirror",
+      "Merge",
+      "Intersect",
+      "Delete"
+    ],
+    "other_tabs": [
+      "Analysis",
+      "Annotate",
+      "Tools",
+      "View"
+    ]
+  },
+  "recommended_RibbonCatalog_creoLayout_deltas": [],
+  "recommended_RibbonCatalog_creoLayout_deltas_note": "No evidence-backed deltas. Re-run inventory on the FreeCADBG Windows worker (or run Extract-CreoRibbonStrings.ps1 on DESKTOP-8I3RN1B) before changing creoLayout().",
+  "next_actions": [
+    "Place a cloud agent / subagent on worker_id 833d56bc-403a-5a5b-8d94-f263a269a52e (DESKTOP-8I3RN1B FreeCADBG).",
+    "Verify parametric.exe and xtop.exe sizes; list bin *.exe/*.dll.",
+    "gcad: binary_session → open_binary → inspect_pe_resources + search_strings for the needle list.",
+    "If gcad open fails: run tools/creo_evidence/Extract-CreoRibbonStrings.ps1 and commit/write creo_string_dump.json.",
+    "Only then propose creoLayout() label/group deltas from exact observed strings."
+  ]
+}
